@@ -1,0 +1,21 @@
+<svg width="1024" height="1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- 马拉松风格应用图标：黑底 + 酸性荧光绿 -->
+  <rect x="60" y="60" width="904" height="904" rx="196" fill="#0b100d"/>
+  <rect x="60" y="60" width="904" height="904" rx="196" fill="none" stroke="#1d2417" stroke-width="6"/>
+
+  <!-- 六边形核心 -->
+  <polygon points="512,236 736,366 736,626 512,756 288,626 288,366"
+           fill="none" stroke="#c9f24b" stroke-width="44" stroke-linejoin="miter"/>
+  <!-- 内核 -->
+  <polygon points="512,392 610,448 610,560 512,616 414,560 414,448" fill="#c9f24b"/>
+  <circle cx="512" cy="504" r="34" fill="#0b100d"/>
+
+  <!-- 速度斜线 -->
+  <rect x="118" y="806" width="180" height="34" fill="#c9f24b" transform="skewX(-24)" transform-origin="118 806"/>
+  <rect x="330" y="806" width="110" height="34" fill="#ff2e7e" transform="skewX(-24)" transform-origin="330 806"/>
+  <rect x="472" y="806" width="60" height="34" fill="#eef0ea" transform="skewX(-24)" transform-origin="472 806"/>
+
+  <!-- 顶部小字条 -->
+  <rect x="200" y="150" width="240" height="18" fill="#2a3320"/>
+  <rect x="460" y="150" width="80" height="18" fill="#2a3320"/>
+</svg>

@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MARATHON 失落星船 — 熵核行动</title>
+</head>
+<body>
+  <div id="app"></div>
+
+  <!-- ======== 主菜单 ======== -->
+  <div id="menu">
+    <div class="menu-inner">
+      <div class="menu-head">
+        <div class="tagline mono">UESC MARATHON // TAU CETI IV // 保全行动协议 7.7</div>
+        <h1 class="wordmark">MARATHON<span class="r">®</span></h1>
+        <div class="subtitle">失落星船 <span class="dim">/</span> 熵核行动 <span class="mono chip-mini">SEARCH &amp; DESTROY · 先取 13 局</span></div>
+      </div>
+
+      <div class="menu-section-label mono">// 选择跑者 RUNNER SELECT</div>
+      <div id="hero-cards"></div>
+
+      <div class="menu-bottom">
+        <div class="menu-opts">
+          <label class="mono">灵敏度 <input id="sens-input" type="range" min="0.3" max="2.5" step="0.1" value="1" /> <span id="sens-val">1.0</span></label>
+        </div>
+        <button id="btn-start" class="btn-acid">部署 · 开始行动</button>
+        <button id="btn-quit-menu" class="btn-ghost">退出游戏</button>
+      </div>
+
+      <div class="menu-controls mono">
+        WASD 移动 · 鼠标 射击/瞄准 · <b>Q/E</b> 技能 · <b>B</b> 购买 · <b>F</b> 长按 安放/拆除熵核 · <b>R</b> 装填 · <b>1/2/3</b> 切枪 · Shift 静步 · C 蹲伏 · 空格 跳跃
+      </div>
+    </div>
+    <div class="menu-stripe"></div>
+  </div>
+
+  <!-- ======== HUD ======== -->
+  <div id="hud" style="display:none">
+    <!-- 顶部比分 -->
+    <div id="topbar">
+      <div class="score ally"><span class="mono lbl" id="side-ally">跑者</span><span id="score-ally">0</span></div>
+      <div id="timer-box">
+        <div id="round-timer" class="mono">1:40</div>
+        <div id="round-num" class="mono">R1 · 上半场</div>
+      </div>
+      <div class="score enemy"><span id="score-enemy">0</span><span class="mono lbl" id="side-enemy">保全</span></div>
+    </div>
+
+    <div id="spike-ind" class="mono" style="display:none">⬢ 熵核已激活</div>
+    <div id="spike-carry" class="mono" style="display:none">⬢ 携带熵核 — 前往 A / B 站点安放 [F]</div>
+
+    <ul id="killfeed"></ul>
+
+    <div id="announce-wrap">
+      <div id="announce"></div>
+      <div id="announce-sub" class="mono"></div>
+    </div>
+
+    <!-- 准星 -->
+    <div id="crosshair">
+      <div class="ch t"></div><div class="ch b"></div><div class="ch l"></div><div class="ch r"></div>
+      <div id="ch-dot"></div>
+    </div>
+    <div id="hitmarker">✕</div>
+
+    <!-- 交互进度 -->
+    <div id="interact-wrap" style="display:none">
+      <div id="interact-label" class="mono">安放熵核</div>
+      <div class="interact-bar"><div id="interact-fill"></div></div>
+    </div>
+
+    <!-- 左下: 生命/技能 -->
+    <div id="bl">
+      <div id="hero-name" class="mono">GLITCH</div>
+      <div class="bars">
+        <div class="bar hp"><div id="hp-fill"></div></div>
+        <div class="bar armor"><div id="armor-fill"></div></div>
+      </div>
+      <div id="hp-num" class="mono">100</div>
+      <div id="abilities">
+        <div class="ab" id="ab-q"><span class="ab-icon" id="ab-q-icon">◆</span><span class="key mono">Q</span><div class="ab-cd" id="ab-q-cd"></div></div>
+        <div class="ab" id="ab-e"><span class="ab-icon" id="ab-e-icon">◆</span><span class="key mono">E</span><div class="ab-cd" id="ab-e-cd"></div></div>
+      </div>
+      <div id="status-chips"></div>
+    </div>
+
+    <!-- 右下: 武器/弹药/经济 -->
+    <div id="br">
+      <div id="credits" class="mono">$ 800</div>
+      <div id="weapon-name" class="mono">P-7 侧卫</div>
+      <div id="ammo" class="mono"><span id="ammo-mag">12</span><span class="dim">/</span><span id="ammo-reserve">36</span></div>
+    </div>
+
+    <canvas id="minimap" width="220" height="180"></canvas>
+
+    <!-- 购买菜单 -->
+    <div id="buymenu" style="display:none">
+      <div class="buy-head">
+        <span class="mono">// 军械终端 ARMORY</span>
+        <span id="buy-credits" class="mono">$ 800</span>
+      </div>
+      <div id="buy-cards"></div>
+      <div class="buy-hint mono">购买阶段按 B 开关 · 点击购买</div>
+    </div>
+    <div id="buy-hint-float" class="mono" style="display:none">按 B 打开军械终端</div>
+    <div id="lock-hint" class="mono" style="display:none">移动鼠标转向 · 点击画面锁定指针（转向不受屏幕边缘限制）</div>
+
+    <div id="vignette"></div>
+    <div id="flashwhite"></div>
+    <div class="scanlines"></div>
+  </div>
+
+  <!-- 暂停 -->
+  <div id="pause" style="display:none">
+    <div class="panel">
+      <h2 class="wordmark sm">已暂停</h2>
+      <div class="mono dim">指针已解锁 — 点击下方继续</div>
+      <button id="btn-resume" class="btn-acid">继续行动</button>
+      <div class="btn-row">
+        <button id="btn-tomenu" class="btn-ghost">返回主菜单</button>
+        <button id="btn-quit" class="btn-ghost">退出游戏</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 阵亡 -->
+  <div id="death-overlay" style="display:none">
+    <div id="death-text" class="wordmark sm">链接中断</div>
+    <div class="mono dim">生物合成体已损毁 — 下回合重新部署</div>
+    <div id="spec-name" class="mono"></div>
+  </div>
+
+  <!-- 比赛结束 -->
+  <div id="match-end" style="display:none">
+    <div class="panel">
+      <div id="match-result" class="wordmark">胜利</div>
+      <div id="match-score" class="mono">13 - 7</div>
+      <button id="btn-restart" class="btn-acid">再次部署</button>
+      <div class="btn-row">
+        <button id="btn-quit2" class="btn-ghost">退出游戏</button>
+      </div>
+    </div>
+    <div class="menu-stripe"></div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
