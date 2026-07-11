@@ -17,6 +17,16 @@ A 5v5 search-and-destroy match aboard a lost starship. Attackers plant the "Entr
 - **Economy**: kill +$200, plant +$300, round win +$3000, round loss +$1900; press **B** during the buy phase to purchase weapons and armor.
 - **Allies & enemies**: AI bots (pathfinding, engaging, planting, defusing, holding sites).
 
+## Screenshots
+
+> Procedurally generated 3D scenes · acid-neon-green HUD · red-black checkerboard sites · safety-yellow hazard stripes · deep-cyan void starfield.
+
+![A-site standoff: attacker pushes in with the Entropy Core at round start](docs/screenshots/01-bsite-standoff.png)
+
+![B-site push: neon site marker and hazard barrier](docs/screenshots/02-bsite-push.png)
+
+![Mid-lane firefight: bullet tracer and an enemy Runner](docs/screenshots/03-firefight.png)
+
 ## Run
 
 ```bash
